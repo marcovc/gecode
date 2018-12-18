@@ -398,9 +398,23 @@ foreach (lib support kernel search int set float
     add_library(gecode${lib} ${sources} ${${libupper}HDR})
     target_include_directories(gecode${lib}
       PUBLIC ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR})
+    install(TARGETS gecode${lib}
+        LIBRARY DESTINATION lib
+        ARCHIVE DESTINATION lib
+        INCLUDES DESTINATION include)   
   endif ()
 endforeach ()
 
+install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/gecode 
+        DESTINATION include
+        FILES_MATCHING PATTERN "*.hh" PATTERN "*.hpp")
+
+install(FILES gecode/kernel/var-type.hpp gecode/kernel/var-imp.hpp
+        DESTINATION include/gecode/kernel/)
+        
+install(FILES ${GECODE_BINARY_DIR}/gecode/support/config.hpp
+        DESTINATION include/gecode/support/)
+        
 option(ENABLE_CPPROFILER "Enable cpprofiler tracer mode" ON)
 if(ENABLE_CPPROFILER)
   add_definitions(-DGECODE_HAS_CPPROFILER)
@@ -454,3 +468,4 @@ add_test(test gecode-test
   -test Int::Arithmetic::Mult::XYZ::Bnd::C
   -test Int::Arithmetic::Mult::XYZ::Dom::A
   -test Search::BAB::Sol::BalGr::Binary::Binary::Binary::1::1)
+
